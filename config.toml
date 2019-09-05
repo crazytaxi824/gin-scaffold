@@ -1,0 +1,74 @@
+# 服务
+[service]
+# 监听地址
+ip = ""
+# 监听端口
+port = 18080
+# 退出等待超时时间（秒）
+quitWaitTimeout = 5
+# 调试模式，会将详细的错误信息输出给客户端
+debug = true
+
+# 日志记录器
+[logger]
+# 记录级别
+level = "debug"
+# 日志输出方式，用|符号分隔多个
+outputs = "./err.log|stdout"
+# 日志输出编码，支持json,console
+encode = "console"
+#encode = "json"
+# 彩色显示level
+colorLevel = false
+# 启用错误跟踪记录
+enableTrace = false
+# 启用调用信息记录
+enableCaller = false
+
+# snowflake算法参数
+[snowflake]
+# epoch值
+epoch = 0
+# 节点值
+node = 0
+
+# 数据库
+[database]
+# 地址
+addr = "127.0.0.1:5432"
+# 账号
+user = "postgres"
+# 密码
+password = ""
+# 库名
+name = "test"
+# 记用SQL语句记录
+enableLog = true
+# 读写超时（秒）
+timeout = 10
+
+[session]
+# sessionid的值加密密钥，密钥的长度16,24,32对应AES-128,AES-192,AES-256算
+key = "abcdef"
+# sessionid的cookie键名
+cookieName = "sessionid"
+# HTTP Only
+httpOnly = false
+# 启用HTTPS
+secure = false
+# 最大生命周期(分)
+maxAge = 60
+# 空闲超时(分)
+idleTime = 40
+# redis地址:端口
+redisAddr = "127.0.0.1:6379"
+# redis的库序号
+redisDB = 0
+# redis的键名前缀
+redisKeyPrefix = "sess_"
+
+[token]
+# 密钥
+key = "abcdef"
+# token时长，单位hour
+expire = 168
