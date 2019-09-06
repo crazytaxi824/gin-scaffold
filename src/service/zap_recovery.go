@@ -98,11 +98,8 @@ func ZapRecovery() gin.HandlerFunc {
 					// error msg
 					param.ErrorMsg = c.Errors.ByType(gin.ErrorTypePrivate).Errors()
 
-					// this defer is for catching global.Logger.Panic
-					defer func() {
-						recover()
-					}()
-
+					// this defer is for catching global.Logger.Panic below
+					defer func() { recover() }()
 					global.Logger.Panic(msg, zap.Any("details", param))
 				}
 			}

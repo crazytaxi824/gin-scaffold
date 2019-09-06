@@ -14,12 +14,12 @@ import (
 )
 
 var (
-	app *gin.Engine
+	App *gin.Engine
 	svr http.Server
 )
 
 func Start() {
-	engineConfig()
+	EngineConfig()
 
 	// 在新协程中启动服务，方便实现退出等待
 	go func() {
@@ -45,12 +45,12 @@ func Start() {
 	}
 }
 
-func engineConfig() {
+func EngineConfig() {
 	// ReleaseMode
 	gin.SetMode(gin.ReleaseMode)
 
 	// gin engine
-	app = gin.New()
+	App = gin.New()
 
 	// set framework middle ware
 	frameworkMiddleWare()
@@ -63,7 +63,7 @@ func engineConfig() {
 
 	svr = http.Server{
 		Addr:              global.Config.Service.IP + ":" + strconv.Itoa(global.Config.Service.Port),
-		Handler:           app,              // 调度器
+		Handler:           App,              // 调度器
 		ReadTimeout:       10 * time.Second, // 读取超时
 		WriteTimeout:      10 * time.Second, // 响应超时
 		IdleTimeout:       10 * time.Second, // 连接空闲超时
@@ -76,28 +76,28 @@ func engineConfig() {
 // 因为middle ware 的执行顺序和 c.Next() 的问题
 func frameworkMiddleWare() {
 	// gin recovery
-	app.Use(ZapRecovery())
+	App.Use(ZapRecovery())
 
 	// zap logger - custom logger
-	app.Use(ZapLogger())
+	App.Use(ZapLogger())
 
 	// 是否将 error 信息返回给前端，service debug = true 模式
 	// gin.ErrorLogger() 的用途是将 error 的内容返回给前端
 	if global.Config.Service.Debug {
-		app.Use(gin.ErrorLogger())
+		App.Use(gin.ErrorLogger())
 	}
 }
 
 // 404 405
 func eventHandler() {
 	// 405
-	app.HandleMethodNotAllowed = true
-	app.NoMethod(func(ctx *gin.Context) {
+	App.HandleMethodNotAllowed = true
+	App.NoMethod(func(ctx *gin.Context) {
 		ctx.AbortWithStatus(405)
 	})
 
 	// 404
-	app.NoRoute(func(ctx *gin.Context) {
+	App.NoRoute(func(ctx *gin.Context) {
 		ctx.AbortWithStatus(404)
 	})
 
@@ -111,7 +111,7 @@ func setAppRecovery() error {
 	if err != nil {
 		return err
 	}
-	app.Use(gin.RecoveryWithWriter(io.MultiWriter(errorFile, os.Stderr)))
+	App.Use(gin.RecoveryWithWriter(io.MultiWriter(errorFile, os.Stderr)))
 	return nil
 }
 
@@ -121,6 +121,6 @@ func setAppLogger() error {
 	if err != nil {
 		return err
 	}
-	app.Use(gin.LoggerWithWriter(io.MultiWriter(logFile, os.Stdout)))
+	App.Use(gin.LoggerWithWriter(io.MultiWriter(logFile, os.Stdout)))
 	return nil
 }

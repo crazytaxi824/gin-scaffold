@@ -4,13 +4,13 @@ import "src/action"
 
 func setRouters() {
 	{
-		//user := app.Group("/user", midware)
-		//user.GET("/list", handler1,handler2,handler3)
+		//user := App.Group("/user", middleware)
+		//user.GET("/list", handler1,handler2,handler3) // 按从左到右顺序执行
 
-		app.POST("/post", action.PostHandler)
-		app.GET("/get/:id", action.GetHandler)
-		app.GET("/panic", action.PanicTest)
-		app.GET("/err", action.ErrTest)
-		app.GET("/broken", action.BrokenPipeTest)
+		App.POST("/post", action.PostHandler)
+		App.GET("/get/:id", action.GetHandler)
+		App.GET("/panic", action.PanicTest)
+		App.GET("/err", action.ErrTest)
+		App.GET("/broken", action.BrokenPipeTest)
 	}
 }
