@@ -20,49 +20,18 @@ type logFormatterParams struct {
 	BodySize   int           `json:"bodySize,omitempty"`   // 返回的数据大小
 
 	ErrorMsg []*gin.Error `json:"errors,omitempty"` // error 错误信息,包含error 和 path/meta
-
-	PanicMsg   string      `json:"panicMsg,omitempty"`   // panic 错误信息
-	PanicTrace [][2]string `json:"panicTrace,omitempty"` // panic 错误跟踪
 }
 
 func ZapLogger() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// Start timer
 		start := time.Now()
-		path := c.Request.URL.Path
-		raw := c.Request.URL.RawQuery
 
 		// Process request
 		c.Next()
 
-		end := time.Now()
-
-		// Log only when path is not being skipped
-		param := logFormatterParams{
-			ClientIP:   c.ClientIP(),
-			Method:     c.Request.Method,
-			StatusCode: c.Writer.Status(),
-			ErrorMsg:   c.Errors,
-			BodySize:   c.Writer.Size(),
-			TimeStamp:  end.Unix(),
-		}
-
-		// latency
-		param.Latency = end.Sub(start)
-
-		// request path
-		if raw != "" {
-			path = path + "?" + raw
-		}
-
-		param.ReqPath = path
-
-		msg := fmt.Sprintf("%-7s %s | %3d |%13v |%15s ",
-			param.Method,
-			param.ReqPath,
-			param.StatusCode,
-			param.Latency,
-			param.ClientIP)
+		// format logger msg
+		msg, param := formatParam(c, start)
 
 		if param.StatusCode >= 500 {
 			global.Logger.Error(msg, zap.Any("details", param))
@@ -70,4 +39,36 @@ func ZapLogger() gin.HandlerFunc {
 			global.Logger.Info(msg, zap.Any("details", param))
 		}
 	}
+}
+
+func formatParam(c *gin.Context, start time.Time) (msg string, param logFormatterParams) {
+	path := c.Request.URL.Path
+	raw := c.Request.URL.RawQuery
+
+	end := time.Now()
+	param = logFormatterParams{
+		ClientIP:   c.ClientIP(),
+		Method:     c.Request.Method,
+		StatusCode: c.Writer.Status(),
+		BodySize:   c.Writer.Size(),
+		TimeStamp:  end.Unix(),
+		Latency:    end.Sub(start),
+		ErrorMsg:   c.Errors,
+	}
+
+	// request path
+	if raw != "" {
+		path = path + "?" + raw
+	}
+
+	param.ReqPath = path
+
+	msg = fmt.Sprintf("%-7s %s | %3d |%13v |%15s ",
+		param.Method,
+		param.ReqPath,
+		param.StatusCode,
+		param.Latency,
+		param.ClientIP)
+
+	return
 }
