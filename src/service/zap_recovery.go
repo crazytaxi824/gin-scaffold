@@ -44,9 +44,6 @@ func ZapRecovery() gin.HandlerFunc {
 
 				param.ReqPath = path
 
-				// error file
-				param.ErrFile, _ = c.Get("file")
-
 				msg := fmt.Sprintf("%-7s %s | %3d |%13v |%15s ",
 					param.Method,
 					param.ReqPath,
@@ -71,7 +68,7 @@ func ZapRecovery() gin.HandlerFunc {
 					_ = c.Error(err.(error))
 
 					// error msg
-					param.ErrorMsg = c.Errors.ByType(gin.ErrorTypePrivate).Errors()
+					param.ErrorMsg = c.Errors
 
 					global.Logger.Error(msg, zap.Any("details", param))
 					return
@@ -96,7 +93,7 @@ func ZapRecovery() gin.HandlerFunc {
 					param.PanicMsg = err.(error).Error()
 
 					// error msg
-					param.ErrorMsg = c.Errors.ByType(gin.ErrorTypePrivate).Errors()
+					param.ErrorMsg = c.Errors
 
 					// this defer is for catching global.Logger.Panic below
 					defer func() { recover() }()

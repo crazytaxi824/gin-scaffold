@@ -19,8 +19,7 @@ type logFormatterParams struct {
 	ReqPath    string        `json:"reqPath,omitempty"`    // 请求路径
 	BodySize   int           `json:"bodySize,omitempty"`   // 返回的数据大小
 
-	ErrorMsg []string    `json:"errorMsg,omitempty"` // error 错误信息
-	ErrFile  interface{} `json:"errFile,omitempty"`  // error 报错文件
+	ErrorMsg []*gin.Error `json:"errors,omitempty"` // error 错误信息,包含error 和 path/meta
 
 	PanicMsg   string      `json:"panicMsg,omitempty"`   // panic 错误信息
 	PanicTrace [][2]string `json:"panicTrace,omitempty"` // panic 错误跟踪
@@ -43,7 +42,7 @@ func ZapLogger() gin.HandlerFunc {
 			ClientIP:   c.ClientIP(),
 			Method:     c.Request.Method,
 			StatusCode: c.Writer.Status(),
-			ErrorMsg:   c.Errors.ByType(gin.ErrorTypePrivate).Errors(),
+			ErrorMsg:   c.Errors,
 			BodySize:   c.Writer.Size(),
 			TimeStamp:  end.Unix(),
 		}
@@ -57,9 +56,6 @@ func ZapLogger() gin.HandlerFunc {
 		}
 
 		param.ReqPath = path
-
-		// error file
-		param.ErrFile, _ = c.Get("file")
 
 		msg := fmt.Sprintf("%-7s %s | %3d |%13v |%15s ",
 			param.Method,
