@@ -39,16 +39,18 @@ func SetAdvLogger() error {
 
 	// 打印设置,两种打印方式 json / console
 	var consoleCfg = zapcore.EncoderConfig{
-		MessageKey:    "message", // 消息字段名
-		LevelKey:      "level",   // 级别字段名
-		TimeKey:       "time",    // 时间字段名
-		CallerKey:     "file",    // 记录源码文件的字段名
-		StacktraceKey: "trace",   // 记录trace
+		MessageKey: "message", // 消息字段名
+		LevelKey:   "level",   // 级别字段名
+		TimeKey:    "time",    // 时间字段名
+		//CallerKey:     "file",    // 记录源码文件的字段名
+		//StacktraceKey: "trace",   // 记录trace
+
+		//// Caller的编码器,FullCallerEncoder,ShortCallerEncoder
+		//EncodeCaller: zapcore.FullCallerEncoder,
 
 		// 大写彩色编码
 		EncodeLevel: zapcore.CapitalColorLevelEncoder,
-		// Caller的编码器,FullCallerEncoder,ShortCallerEncoder
-		EncodeCaller: zapcore.FullCallerEncoder,
+
 		// 编码时间字符串的格式
 		EncodeTime: func(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
 			enc.AppendString(t.Format("2006-01-02 15:04:05"))
@@ -56,16 +58,18 @@ func SetAdvLogger() error {
 	}
 
 	var jsonCfg = zapcore.EncoderConfig{
-		MessageKey:    "message", // 消息字段名
-		LevelKey:      "level",   // 级别字段名
-		TimeKey:       "time",    // 时间字段名
-		CallerKey:     "file",    // 记录源码文件的字段名
-		StacktraceKey: "trace",   // 记录trace
+		MessageKey: "message", // 消息字段名
+		LevelKey:   "level",   // 级别字段名
+		TimeKey:    "time",    // 时间字段名
+		//CallerKey:     "file",    // 记录源码文件的字段名
+		//StacktraceKey: "trace",   // 记录trace
+
+		////Caller的编码器,FullCallerEncoder,ShortCallerEncoder
+		//EncodeCaller: zapcore.FullCallerEncoder,
 
 		// 大写编码
 		EncodeLevel: zapcore.CapitalLevelEncoder,
-		// Caller的编码器,FullCallerEncoder,ShortCallerEncoder
-		EncodeCaller: zapcore.FullCallerEncoder,
+
 		// 编码时间字符串的格式
 		EncodeTime: func(t time.Time, p zapcore.PrimitiveArrayEncoder) {
 			p.AppendString(t.Format("2006-01-02 15:04:05"))
@@ -85,8 +89,8 @@ func SetAdvLogger() error {
 	)
 
 	// 如果需要用到 caller 和 Stacktrace 需要在这里添加
-	Logger = zap.New(core, zap.AddCaller()) // 只使用 caller
-	//Logger = zap.New(core) // 不使用 caller 和 Stacktrace
+	Logger = zap.New(core) // 不使用 caller 和 Stacktrace
+	//Logger = zap.New(core, zap.AddCaller()) // 只使用 caller
 	//Logger = zap.New(core, zap.AddCaller(), zap.AddStacktrace(zapcore.ErrorLevel)) // 使用 caller 和 Stacktrace
 
 	// 必须 sync

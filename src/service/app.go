@@ -23,10 +23,10 @@ func Start() {
 
 	// 在新协程中启动服务，方便实现退出等待
 	go func() {
-		global.Logger.Debug("HTTP服务 " + svr.Addr + " 启动成功")
+		global.Logger.Info("HTTP服务 " + svr.Addr + " 启动成功")
 		if err := svr.ListenAndServe(); err != nil {
 			if err == http.ErrServerClosed {
-				global.Logger.Debug("服务已退出")
+				global.Logger.Info("服务已退出")
 			} else {
 				global.Logger.Fatal(err.Error())
 			}
