@@ -15,6 +15,7 @@ func main() {
 	}
 
 	// 设置日志记录器
+	//if err := global.SetAdvLogger(); err != nil {
 	if err := global.SetLogger(); err != nil {
 		panic(err)
 	}

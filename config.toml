@@ -14,7 +14,7 @@ debug = true
 # 记录级别
 level = "debug"
 # 日志输出方式，用|符号分隔多个
-outputs = "./err.log|stdout"
+outputs = "./gin.log|stdout"
 # 日志输出编码，支持json,console
 encode = "console"
 #encode = "json"
