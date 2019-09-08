@@ -17,8 +17,10 @@ import (
 type logFormatterPanicParams struct {
 	logFormatterParams
 
-	PanicMsg   string       `json:"panicMsg,omitempty"`   // panic 错误信息, 不能用interface 否则无法被 zap.Any 打印
-	PanicTrace []panicTrace `json:"panicTrace,omitempty"` // panic 错误跟踪
+	Panic struct {
+		PanicMsg   string       `json:"panicMsg,omitempty"`   // panic 错误信息, 不能用interface 否则无法被 zap.Any 打印
+		PanicTrace []panicTrace `json:"panicTrace,omitempty"` // panic 错误跟踪
+	} `json:"panic,omitempty"`
 }
 
 type panicTrace struct {
@@ -46,13 +48,16 @@ func ZapRecovery() gin.HandlerFunc {
 					global.Logger.Error(msg, zap.Any("details", param))
 					return
 				} else {
+
 					// Panic Msg
 					panicParam := logFormatterPanicParams{
 						logFormatterParams: param,
 
 						// 这里可能为 string，可能为error，所以使用fmt包来自动处理
-						PanicMsg: fmt.Sprintf("%s", err),
+						//Panic: panicDetails,
 					}
+
+					panicParam.Panic.PanicMsg = fmt.Sprintf("%s", err)
 
 					// Panic trace
 					var panicPair panicTrace
@@ -66,7 +71,7 @@ func ZapRecovery() gin.HandlerFunc {
 						panicPair.Function = fn.Name()
 						panicPair.Trace = file + ":" + strconv.Itoa(line)
 
-						panicParam.PanicTrace = append(panicParam.PanicTrace, panicPair)
+						panicParam.Panic.PanicTrace = append(panicParam.Panic.PanicTrace, panicPair)
 					}
 
 					// this defer is for catching global.Logger.Panic below

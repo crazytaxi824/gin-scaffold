@@ -14,7 +14,7 @@ type logFormatterParams struct {
 	StatusCode int           `json:"statusCode,omitempty"` // 返回 http code
 	TimeStamp  int64         `json:"timeStamp,omitempty"`  // log 时间
 	Latency    time.Duration `json:"latency,omitempty"`    // 请求处理时长
-	ClientIP   string        `json:"clientIp,omitempty"`   // 请求IP
+	ClientIP   string        `json:"clientIP,omitempty"`   // 请求IP
 	Method     string        `json:"method,omitempty"`     // 请求方法
 	ReqPath    string        `json:"reqPath,omitempty"`    // 请求路径
 	BodySize   int           `json:"bodySize,omitempty"`   // 返回的数据大小
