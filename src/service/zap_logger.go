@@ -19,7 +19,12 @@ type logFormatterParams struct {
 	ReqPath    string        `json:"reqPath,omitempty"`    // 请求路径
 	BodySize   int           `json:"bodySize,omitempty"`   // 返回的数据大小
 
-	ErrorMsg []*gin.Error `json:"errors,omitempty"` // error 错误信息,包含error 和 path/meta
+	Errors []errorTrace `json:"errors,omitempty"` // error 错误信息,包含error 和 trace/meta
+}
+
+type errorTrace struct {
+	ErrorMsg   string `json:"error,omitempty"` // 错误信息
+	ErrorTrace string `json:"trace,omitempty"` // 错误跟踪
 }
 
 func ZapLogger() gin.HandlerFunc {
@@ -53,7 +58,15 @@ func formatParam(c *gin.Context, start time.Time) (msg string, param logFormatte
 		BodySize:   c.Writer.Size(),
 		TimeStamp:  end.Unix(),
 		Latency:    end.Sub(start),
-		ErrorMsg:   c.Errors,
+		//ErrorMsg:   c.Errors,
+	}
+
+	// error trace
+	for k := range c.Errors {
+		var errMsg errorTrace
+		errMsg.ErrorTrace = c.Errors[k].Meta.(string)
+		errMsg.ErrorMsg = c.Errors[k].Err.Error()
+		param.Errors = append(param.Errors, errMsg)
 	}
 
 	// request path

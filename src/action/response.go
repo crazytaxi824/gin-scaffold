@@ -27,9 +27,7 @@ func makeRespMapData() (respData RespMapData) {
 
 // 返回 500 错误，追踪 caller
 func abortWithError(ctx *gin.Context, err error) {
-	er := ctx.AbortWithError(500, err)
-
 	// 追加错误行数到 gin.Error 中，使用 meta 属性
 	_, file, line, _ := runtime.Caller(1)
-	er.SetMeta(file + ":" + strconv.Itoa(line))
+	ctx.AbortWithError(500, err).SetMeta(file + ":" + strconv.Itoa(line))
 }
