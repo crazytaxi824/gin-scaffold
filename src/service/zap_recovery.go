@@ -39,24 +39,22 @@ func ZapRecovery() gin.HandlerFunc {
 				// 判断 broken pipe
 				// Check for a broken connection, as it is not really a
 				// condition that warrants a panic stack trace.
-				var brokenPipe bool
-				checkBrokenPipe(c, err)
+				brokenPipe := checkBrokenPipe(c, err)
 
+				// format logger msg
 				msg, param := formatParam(c, start)
 
 				if brokenPipe {
 					global.Logger.Error(msg, zap.Any("details", param))
 					return
 				} else {
-
-					// Panic Msg
 					panicParam := logFormatterPanicParams{
 						logFormatterParams: param,
-
-						// 这里可能为 string，可能为error，所以使用fmt包来自动处理
 						//Panic: panicDetails,
 					}
 
+					// Panic Msg
+					// 这里可能为 string，可能为error，所以使用fmt包来自动处理
 					panicParam.Panic.PanicMsg = fmt.Sprintf("%s", err)
 
 					// Panic trace
@@ -67,23 +65,31 @@ func ZapRecovery() gin.HandlerFunc {
 							break
 						}
 
+						// get func name
 						fn := runtime.FuncForPC(pc)
 						panicPair.Function = fn.Name()
+
+						// get file + line
 						panicPair.Trace = file + ":" + strconv.Itoa(line)
 
+						// append to panic trace
 						panicParam.Panic.PanicTrace = append(panicParam.Panic.PanicTrace, panicPair)
 					}
 
 					// this defer is for catching global.Logger.Panic below
+					// 因为 logger.panic 会触发 Panic
 					defer func() { recover() }()
 					global.Logger.Panic(msg, zap.Any("details", panicParam))
 				}
 			}
 		}()
+		// 传递 context
 		c.Next()
 	}
 }
 
+// 检查 是否 broken pipe error。
+// 如果是，将 broken pipe 的错误放到 ctx.error 里面，不用 panic 打印。
 // true 代表是 broken pipe error
 func checkBrokenPipe(ctx *gin.Context, err interface{}) bool {
 	var brokenPipe bool

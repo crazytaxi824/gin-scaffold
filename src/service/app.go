@@ -73,9 +73,9 @@ func EngineConfig() {
 
 // 框架中间件
 // 注意，Recovery() 放在最外层（最上层）
-// 因为middle ware 的执行顺序和 c.Next() 的问题
+// 因为 middle ware 的执行顺序和 c.Next() 的问题
 func frameworkMiddleWare() {
-	// gin recovery
+	// recovery with zap logger
 	App.Use(ZapRecovery())
 
 	// zap logger - custom logger

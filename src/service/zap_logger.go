@@ -32,12 +32,13 @@ func ZapLogger() gin.HandlerFunc {
 		// Start timer
 		start := time.Now()
 
-		// Process request
+		// 传递 context
 		c.Next()
 
 		// format logger msg
 		msg, param := formatParam(c, start)
 
+		// 根据 status code 来判断是否用 error 来打印
 		if param.StatusCode >= 500 {
 			global.Logger.Error(msg, zap.Any("details", param))
 		} else {
