@@ -48,6 +48,7 @@ func PostHandler(ctx *gin.Context) {
 }
 
 func PanicTest(ctx *gin.Context) {
+	// 先添加两个错误，再触发panic
 	_, err := strconv.Atoi("haha")
 	if err != nil {
 		abortWithError(ctx, err)
@@ -59,6 +60,7 @@ func PanicTest(ctx *gin.Context) {
 	}
 
 	var is []int
+	// 触发 panic
 	log.Println(is[2])
 }
 
@@ -66,9 +68,4 @@ func ErrTest(ctx *gin.Context) {
 	abortWithError(ctx, errors.New("new error1"))
 	abortWithError(ctx, errors.New("new error2"))
 	return
-}
-
-func BrokenPipeTest(ctx *gin.Context) {
-	ctx.Writer.Write([]byte("1"))
-	ctx.Writer.Write([]byte("2"))
 }
