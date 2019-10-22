@@ -59,7 +59,7 @@ func ZapRecovery() gin.HandlerFunc {
 
 					// Panic trace
 					var panicPair panicTrace
-					for i := 3; ; i++ {
+					for i := 1; ; i++ {
 						pc, file, line, ok := runtime.Caller(i)
 						if !ok {
 							break

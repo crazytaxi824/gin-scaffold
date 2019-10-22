@@ -59,7 +59,6 @@ func formatParam(c *gin.Context, start time.Time) (msg string, param logFormatte
 		BodySize:   c.Writer.Size(),
 		TimeStamp:  end.Unix(),
 		Latency:    end.Sub(start),
-		//ErrorMsg:   c.Errors,
 	}
 
 	// error trace
