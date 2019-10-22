@@ -11,5 +11,7 @@ func setRouters() {
 		App.GET("/get/:id", action.GetHandler)
 		App.GET("/panic", action.PanicTest)
 		App.GET("/err", action.ErrTest)
+
+		App.GET("/ws", action.WebsocketTest)
 	}
 }
