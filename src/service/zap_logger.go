@@ -23,8 +23,8 @@ type logFormatterParams struct {
 }
 
 type errorTrace struct {
-	ErrorMsg   string `json:"error,omitempty"` // 错误信息
-	ErrorTrace string `json:"trace,omitempty"` // 错误跟踪
+	ErrorMsg   string      `json:"error,omitempty"` // 错误信息
+	ErrorTrace interface{} `json:"trace,omitempty"` // 错误跟踪
 }
 
 func ZapLogger() gin.HandlerFunc {
@@ -65,7 +65,7 @@ func formatParam(c *gin.Context, start time.Time) (msg string, param logFormatte
 	// error trace
 	for k := range c.Errors {
 		var errMsg errorTrace
-		errMsg.ErrorTrace = c.Errors[k].Meta.(string)
+		errMsg.ErrorTrace = c.Errors[k].Meta
 		errMsg.ErrorMsg = c.Errors[k].Err.Error()
 		param.Errors = append(param.Errors, errMsg)
 	}
