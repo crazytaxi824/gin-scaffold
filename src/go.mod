@@ -8,6 +8,7 @@ require (
 	github.com/gbrlsnchs/jwt/v3 v3.0.0-beta.1
 	github.com/gin-gonic/gin v1.4.0
 	github.com/go-pg/pg v8.0.6+incompatible
+	github.com/gorilla/websocket v1.4.0
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/spf13/viper v1.4.0
 	go.uber.org/zap v1.10.0

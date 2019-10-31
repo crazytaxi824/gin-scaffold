@@ -81,6 +81,9 @@ func frameworkMiddleWare() {
 	// zap logger - custom logger
 	App.Use(ZapLogger())
 
+	// allow cross origin
+	App.Use(CORS())
+
 	// 是否将 error 信息返回给前端，service debug = true 模式
 	// gin.ErrorLogger() 的用途是将 error 的内容返回给前端
 	if global.Config.Service.Debug {
