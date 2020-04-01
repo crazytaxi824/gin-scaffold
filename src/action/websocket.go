@@ -2,23 +2,29 @@ package action
 
 import (
 	"net/http"
-	"src/global"
 	"time"
+
+	"src/global"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 )
 
-var connPool map[string]interface{}
+// var connPool map[string]interface{}
+//
+// func init() {
+// 	connPool = make(map[string]interface{})
+// }
 
-func init() {
-	connPool = make(map[string]interface{})
-}
+const (
+	buffSize = 1024
+	timeout  = 5
+)
 
 var upgrader = websocket.Upgrader{
-	HandshakeTimeout: 5 * time.Second,
-	ReadBufferSize:   1024,
-	WriteBufferSize:  1024,
+	HandshakeTimeout: timeout * time.Second,
+	ReadBufferSize:   buffSize,
+	WriteBufferSize:  buffSize,
 
 	CheckOrigin: func(r *http.Request) bool {
 		return true

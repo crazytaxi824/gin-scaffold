@@ -12,7 +12,7 @@ import (
 var Logger *zap.Logger
 
 // ServiceLogger 服务日志记录器
-//var ServiceLogger *zap.Logger
+// var ServiceLogger *zap.Logger
 
 // SetLogger 设置logger
 func SetLogger() error {
@@ -75,20 +75,20 @@ func SetLogger() error {
 	}
 	defer Logger.Sync()
 
-	//// 设置ServiceLogger
-	//ServiceLogger, err = zap.Config{
-	//	Level:             zap.NewAtomicLevelAt(zapLevel), // 日志记录级别
-	//	Development:       Config.Service.Debug,           // 开发模式
-	//	Encoding:          Config.Logger.Encode,           // 日志格式json/console
-	//	EncoderConfig:     encoderConfig,                  // 编码器配置
-	//	OutputPaths:       outputs,                        // 输出路径
-	//	DisableStacktrace: true,                           // 屏蔽堆栈跟踪
-	//	DisableCaller:     true,                           // 屏蔽跟踪
-	//}.Build()
-	//if err != nil {
-	//	return err
-	//}
-	//defer ServiceLogger.Sync()
+	// // 设置ServiceLogger
+	// ServiceLogger, err = zap.Config{
+	// 	Level:             zap.NewAtomicLevelAt(zapLevel), // 日志记录级别
+	// 	Development:       Config.Service.Debug,           // 开发模式
+	// 	Encoding:          Config.Logger.Encode,           // 日志格式json/console
+	// 	EncoderConfig:     encoderConfig,                  // 编码器配置
+	// 	OutputPaths:       outputs,                        // 输出路径
+	// 	DisableStacktrace: true,                           // 屏蔽堆栈跟踪
+	// 	DisableCaller:     true,                           // 屏蔽跟踪
+	// }.Build()
+	// if err != nil {
+	// 	return err
+	// }
+	// defer ServiceLogger.Sync()
 
 	return err
 }

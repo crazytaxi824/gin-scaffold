@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+
 	"src/global"
 	"src/service"
 )
@@ -15,7 +16,7 @@ func main() {
 	}
 
 	// 设置日志记录器
-	//if err := global.SetLogger(); err != nil {
+	// if err := global.SetLogger(); err != nil {
 	if err := global.SetAdvLogger(); err != nil {
 		panic(err)
 	}
@@ -33,10 +34,10 @@ func main() {
 	}
 
 	// 设置sessions
-	//if err := global.SetSessions(); err != nil {
+	// if err := global.SetSessions(); err != nil {
 	//	global.Logger.Fatal(err.Error())
 	//	return
-	//}
+	// }
 
 	service.Start()
 }

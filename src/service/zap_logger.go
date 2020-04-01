@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+	"net/http"
 	"src/global"
 	"time"
 
@@ -39,7 +40,7 @@ func ZapLogger() gin.HandlerFunc {
 		msg, param := formatParam(c, start)
 
 		// 根据 status code 来判断是否用 error 来打印
-		if param.StatusCode >= 500 {
+		if param.StatusCode >= http.StatusInternalServerError {
 			global.Logger.Error(msg, zap.Any("details", param))
 		} else {
 			global.Logger.Info(msg, zap.Any("details", param))
@@ -83,5 +84,5 @@ func formatParam(c *gin.Context, start time.Time) (msg string, param logFormatte
 		param.Latency,
 		param.ClientIP)
 
-	return
+	return msg, param
 }

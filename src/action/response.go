@@ -1,6 +1,7 @@
 package action
 
 import (
+	"net/http"
 	"runtime"
 	"strconv"
 
@@ -29,5 +30,5 @@ func makeRespMapData() (respData RespMapData) {
 func abortWithError(ctx *gin.Context, err error) {
 	// 追加错误行数到 gin.Error 中，使用 meta 属性
 	_, file, line, _ := runtime.Caller(1)
-	ctx.AbortWithError(500, err).SetMeta(file + ":" + strconv.Itoa(line))
+	ctx.AbortWithError(http.StatusInternalServerError, err).SetMeta(file + ":" + strconv.Itoa(line))
 }

@@ -6,11 +6,12 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"src/global"
 	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
+
+	"src/global"
 )
 
 var (
@@ -61,13 +62,15 @@ func EngineConfig() {
 	// set routers
 	setRouters()
 
+	const timeout = 10
+
 	svr = http.Server{
 		Addr:              global.Config.Service.IP + ":" + strconv.Itoa(global.Config.Service.Port),
-		Handler:           App,              // 调度器
-		ReadTimeout:       10 * time.Second, // 读取超时
-		WriteTimeout:      10 * time.Second, // 响应超时
-		IdleTimeout:       10 * time.Second, // 连接空闲超时
-		ReadHeaderTimeout: 10 * time.Second, // http header读取超时
+		Handler:           App,                   // 调度器
+		ReadTimeout:       timeout * time.Second, // 读取超时
+		WriteTimeout:      timeout * time.Second, // 响应超时
+		IdleTimeout:       timeout * time.Second, // 连接空闲超时
+		ReadHeaderTimeout: timeout * time.Second, // http header读取超时
 	}
 }
 
@@ -96,12 +99,12 @@ func eventHandler() {
 	// 405
 	App.HandleMethodNotAllowed = true
 	App.NoMethod(func(ctx *gin.Context) {
-		ctx.AbortWithStatus(405)
+		ctx.AbortWithStatus(http.StatusMethodNotAllowed)
 	})
 
 	// 404
 	App.NoRoute(func(ctx *gin.Context) {
-		ctx.AbortWithStatus(404)
+		ctx.AbortWithStatus(http.StatusNotFound)
 	})
 
 	// 500 use abortWithError / ctx.AbortWithError
@@ -110,6 +113,7 @@ func eventHandler() {
 
 // gin recovery
 func setAppRecovery() error {
+	// #nosec
 	errorFile, err := os.OpenFile("frame_err.log", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0666)
 	if err != nil {
 		return err
@@ -120,6 +124,7 @@ func setAppRecovery() error {
 
 // gin logger
 func setAppLogger() error {
+	// #nosec
 	logFile, err := os.OpenFile("err.log", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0666)
 	if err != nil {
 		return err

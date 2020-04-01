@@ -3,6 +3,7 @@ package service
 import (
 	"fmt"
 	"net"
+	"net/http"
 	"os"
 	"runtime"
 	"src/global"
@@ -34,7 +35,7 @@ func ZapRecovery() gin.HandlerFunc {
 
 		defer func() {
 			if err := recover(); err != nil {
-				c.AbortWithStatus(500)
+				c.AbortWithStatus(http.StatusInternalServerError)
 
 				// 判断 broken pipe
 				// Check for a broken connection, as it is not really a
@@ -95,7 +96,8 @@ func checkBrokenPipe(ctx *gin.Context, err interface{}) bool {
 	var brokenPipe bool
 	if ne, ok := err.(*net.OpError); ok {
 		if se, ok := ne.Err.(*os.SyscallError); ok {
-			if strings.Contains(strings.ToLower(se.Error()), "broken pipe") || strings.Contains(strings.ToLower(se.Error()), "connection reset by peer") {
+			if strings.Contains(strings.ToLower(se.Error()), "broken pipe") ||
+				strings.Contains(strings.ToLower(se.Error()), "connection reset by peer") {
 				brokenPipe = true
 
 				// add broken pipe error to gin.context.Error
