@@ -3,6 +3,7 @@ package service
 import "src/action"
 
 func setRouters() {
+	// nolint:gocritic // test
 	{
 		// user := App.Group("/user", middleware)
 		// user.GET("/list", handler1,handler2,handler3) // 按从左到右顺序执行

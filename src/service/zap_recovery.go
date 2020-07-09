@@ -47,11 +47,9 @@ func ZapRecovery() gin.HandlerFunc {
 
 				if brokenPipe {
 					global.Logger.Error(msg, zap.Any("details", param))
-					return
 				} else {
 					panicParam := logFormatterPanicParams{
 						logFormatterParams: param,
-						//Panic: panicDetails,
 					}
 
 					// Panic Msg
@@ -78,7 +76,7 @@ func ZapRecovery() gin.HandlerFunc {
 					}
 
 					// this defer is for catching global.Logger.Panic below
-					// 因为 logger.panic 会触发 Panic
+					// nolint:errcheck // 因为 logger.panic 会触发 Panic
 					defer func() { recover() }()
 					global.Logger.Panic(msg, zap.Any("details", panicParam))
 				}
@@ -100,7 +98,7 @@ func checkBrokenPipe(ctx *gin.Context, err interface{}) bool {
 				strings.Contains(strings.ToLower(se.Error()), "connection reset by peer") {
 				brokenPipe = true
 
-				// add broken pipe error to gin.context.Error
+				// nolint:errcheck // add broken pipe error to gin.context.Error
 				_ = ctx.Error(err.(error))
 			}
 		}
