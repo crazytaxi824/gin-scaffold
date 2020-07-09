@@ -20,5 +20,6 @@ require (
 	golang.org/x/sys v0.0.0-20200406155108-e3b113bbe6a4 // indirect
 	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 	gopkg.in/go-playground/validator.v9 v9.30.2 // indirect
+	gopkg.in/yaml.v3 v3.0.0-20200615113413-eeeca48fe776
 	mellium.im/sasl v0.2.1 // indirect
 )

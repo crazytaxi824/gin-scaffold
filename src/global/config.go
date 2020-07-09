@@ -3,55 +3,58 @@ package global
 import (
 	"errors"
 	"flag"
+	"fmt"
+	"io/ioutil"
 	"path/filepath"
 	"strings"
 
 	"github.com/spf13/viper"
+	"gopkg.in/yaml.v3"
 )
 
 // Config 全局配置
 var Config struct {
 	Service struct {
-		IP              string
-		Port            int
-		QuitWaitTimeout int
-		Debug           bool
-	}
+		IP              string `yaml:"ip"`
+		Port            int    `yaml:"port"`
+		QuitWaitTimeout int    `yaml:"quitWaitTimeout"`
+		Debug           bool   `yaml:"debug"`
+	} `yaml:"service"`
 	Logger struct {
-		Level        string
-		Outputs      string
-		Encode       string
-		ColorLevel   bool
-		EnableTrace  bool
-		EnableCaller bool
+		Level        string `yaml:"level"`
+		Outputs      string `yaml:"outputs"`
+		Encode       string `yaml:"encode"`
+		ColorLevel   bool   `yaml:"colorLevel"`
+		EnableTrace  bool   `yaml:"enableTrace"`
+		EnableCaller bool   `yaml:"enableCaller"`
 	}
 	Snowflake struct {
-		Epoch int64
-		Node  int64
-	}
+		Epoch int64 `yaml:"epoch"`
+		Node  int64 `yaml:"node"`
+	} `yaml:"snowflake"`
 	Database struct {
-		Addr      string
-		User      string
-		Password  string
-		Name      string
-		EnableLog bool
-		Timeout   int
-	}
+		Addr      string `yaml:"addr"`
+		User      string `yaml:"user"`
+		Password  string `yaml:"password"`
+		Name      string `yaml:"name"`
+		EnableLog bool   `yaml:"enableLog"`
+		Timeout   int    `yaml:"timeout"`
+	} `yaml:"database"`
 	Session struct {
-		Key            string
-		CookieName     string
-		HTTPOnly       bool
-		Secure         bool
-		MaxAge         int
-		IdleTime       int
-		RedisAddr      string
-		RedisDB        int
-		RedisKeyPrefix string
-	}
+		Key            string `yaml:"key"`
+		CookieName     string `yaml:"cookieName"`
+		HTTPOnly       bool   `yaml:"httpOnly"`
+		Secure         bool   `yaml:"secure"`
+		MaxAge         int    `yaml:"maxAge"`
+		IdleTime       int    `yaml:"idleTime"`
+		RedisAddr      string `yaml:"redisAddr"`
+		RedisDB        int    `yaml:"redisDb"`
+		RedisKeyPrefix string `yaml:"redisKeyPrefix"`
+	} `yaml:"session"`
 	Token struct {
-		Key    string
-		Expire int
-	}
+		Key    string `yaml:"key"`
+		Expire int    `yaml:"expire"`
+	} `yaml:"token"`
 }
 
 // 解析配置文件路径
@@ -89,4 +92,21 @@ func SetConfig() error {
 		return err
 	}
 	return viper.Unmarshal(&Config)
+}
+
+func SetConfigYaml() error {
+	configFilePath := flag.String("c", "./config.yml", "配置文件路径")
+	flag.Parse()
+
+	cfgFile, err := ioutil.ReadFile(*configFilePath)
+	if err != nil {
+		return fmt.Errorf("读取配置文件错误：%w", err)
+	}
+
+	err = yaml.Unmarshal(cfgFile, &Config)
+	if err != nil {
+		return fmt.Errorf("读取配置文件错误：%w", err)
+	}
+
+	return nil
 }
