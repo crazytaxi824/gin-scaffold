@@ -1,6 +1,6 @@
 module src
 
-go 1.13
+go 1.14
 
 require (
 	github.com/bwmarrin/snowflake v0.3.0
@@ -17,7 +17,7 @@ require (
 	github.com/modern-go/reflect2 v1.0.1 // indirect
 	github.com/spf13/viper v1.4.0
 	go.uber.org/zap v1.10.0
-	golang.org/x/sys v0.0.0-20200331124033-c3d80250170d // indirect
+	golang.org/x/sys v0.0.0-20200406155108-e3b113bbe6a4 // indirect
 	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 	gopkg.in/go-playground/validator.v9 v9.30.2 // indirect
 	mellium.im/sasl v0.2.1 // indirect

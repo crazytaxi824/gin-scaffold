@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/signal"
 	"strconv"
+	"syscall"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -35,8 +36,8 @@ func Start() {
 	}()
 
 	// 退出进程时等待
-	quit := make(chan os.Signal)
-	signal.Notify(quit, os.Interrupt)
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGHUP, syscall.SIGQUIT, syscall.SIGTERM)
 	<-quit
 	// 指定退出超时时间
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(global.Config.Service.QuitWaitTimeout)*time.Second)
@@ -111,7 +112,7 @@ func eventHandler() {
 	// it will use the logger to print the error msg
 }
 
-// gin recovery
+// nolint:deadcode,unused // gin default recovery
 func setAppRecovery() error {
 	// #nosec
 	errorFile, err := os.OpenFile("frame_err.log", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0666)
@@ -122,7 +123,7 @@ func setAppRecovery() error {
 	return nil
 }
 
-// gin logger
+// nolint:deadcode,unused // gin default logger
 func setAppLogger() error {
 	// #nosec
 	logFile, err := os.OpenFile("err.log", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0666)

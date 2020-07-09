@@ -6,11 +6,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// 解决跨域
+// CORS 解决跨域
 func CORS() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		method := c.Request.Method
-		origin := c.Request.Header.Get("Origin") //请求头部
+		origin := c.Request.Header.Get("Origin") // 请求头部
 
 		if origin != "" {
 			// 允许所有域
