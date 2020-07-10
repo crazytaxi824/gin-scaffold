@@ -79,6 +79,10 @@ func EngineConfig() {
 // 注意，Recovery() 放在最外层（最上层）
 // 因为 middle ware 的执行顺序和 c.Next() 的问题
 func frameworkMiddleWare() {
+	if global.Config.Service.Limiter > 0 {
+		App.Use(LimiterMiddle())
+	}
+
 	// recovery with zap logger
 	App.Use(ZapRecovery())
 

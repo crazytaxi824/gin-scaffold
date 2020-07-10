@@ -93,14 +93,10 @@ func SetAdvLogger() error {
 	// Logger = zap.New(core, zap.AddCaller()) // 只使用 caller
 	// Logger = zap.New(core, zap.AddCaller(), zap.AddStacktrace(zapcore.ErrorLevel)) // 使用 caller 和 Stacktrace
 
-	// 必须 sync
-	defer func() {
-		er := Logger.Sync()
-		if er != nil {
-			Logger.Error(er.Error())
-			return
-		}
-	}()
+	// 必须 sync, 不要返回 error！
+	// newer versions of OS X also don't support syncing stdout.
+	// nolint:errcheck
+	defer Logger.Sync()
 
 	return nil
 }

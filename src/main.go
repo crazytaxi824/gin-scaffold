@@ -26,6 +26,10 @@ func main() {
 		return
 	}
 
+	if global.Config.Service.Limiter > 0 {
+		service.SetLimiter()
+	}
+
 	// 设置数据库
 	if err := global.SetDatabase(); err != nil {
 		global.Logger.Fatal(err.Error())

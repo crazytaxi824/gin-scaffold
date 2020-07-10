@@ -18,6 +18,7 @@ var Config struct {
 		IP              string `yaml:"ip"`
 		Port            int    `yaml:"port"`
 		QuitWaitTimeout int    `yaml:"quitWaitTimeout"`
+		Limiter         int    `yaml:"limiter"`
 		Debug           bool   `yaml:"debug"`
 	} `yaml:"service"`
 	Logger struct {
