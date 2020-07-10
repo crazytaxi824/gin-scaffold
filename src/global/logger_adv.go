@@ -19,34 +19,34 @@ func SetAdvLogger() error {
 	})
 
 	// 打印到什么地方
-	fullLogFile, err := os.OpenFile("./gin.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	fullLogFile, err := os.OpenFile("./gin.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0600)
 	if err != nil {
 		return err
 	}
 
-	errorLogFile, err := os.OpenFile("./err.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	errorLogFile, err := os.OpenFile("./err.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0600)
 	if err != nil {
 		return err
 	}
 
-	//In particular, *os.Files must be locked before use.
+	// In particular, *os.Files must be locked before use.
 	logToFullLogFile := zapcore.Lock(fullLogFile)
 	LogToErrorLogFile := zapcore.Lock(errorLogFile)
 	LogToConsole := zapcore.Lock(os.Stdout)
 
 	// 其他 io.writer 使用 zapcore.AddSync
-	//zapcore.AddSync(kafka io.writer)
+	// zapcore.AddSync(kafka io.writer)
 
 	// 打印设置,两种打印方式 json / console
 	var consoleCfg = zapcore.EncoderConfig{
 		MessageKey: "message", // 消息字段名
 		LevelKey:   "level",   // 级别字段名
 		TimeKey:    "time",    // 时间字段名
-		//CallerKey:     "file",    // 记录源码文件的字段名
-		//StacktraceKey: "trace",   // 记录trace
+		// CallerKey:     "file",    // 记录源码文件的字段名
+		// StacktraceKey: "trace",   // 记录trace
 
-		//// Caller的编码器,FullCallerEncoder,ShortCallerEncoder
-		//EncodeCaller: zapcore.FullCallerEncoder,
+		// // Caller的编码器,FullCallerEncoder,ShortCallerEncoder
+		// EncodeCaller: zapcore.FullCallerEncoder,
 
 		// 大写彩色编码
 		EncodeLevel: zapcore.CapitalColorLevelEncoder,
@@ -61,11 +61,11 @@ func SetAdvLogger() error {
 		MessageKey: "message", // 消息字段名
 		LevelKey:   "level",   // 级别字段名
 		TimeKey:    "time",    // 时间字段名
-		//CallerKey:     "file",    // 记录源码文件的字段名
-		//StacktraceKey: "trace",   // 记录trace
+		// CallerKey:     "file",    // 记录源码文件的字段名
+		// StacktraceKey: "trace",   // 记录trace
 
-		////Caller的编码器,FullCallerEncoder,ShortCallerEncoder
-		//EncodeCaller: zapcore.FullCallerEncoder,
+		// //Caller的编码器,FullCallerEncoder,ShortCallerEncoder
+		// EncodeCaller: zapcore.FullCallerEncoder,
 
 		// 大写编码
 		EncodeLevel: zapcore.CapitalLevelEncoder,
@@ -90,11 +90,17 @@ func SetAdvLogger() error {
 
 	// 如果需要用到 caller 和 Stacktrace 需要在这里添加
 	Logger = zap.New(core) // 不使用 caller 和 Stacktrace
-	//Logger = zap.New(core, zap.AddCaller()) // 只使用 caller
-	//Logger = zap.New(core, zap.AddCaller(), zap.AddStacktrace(zapcore.ErrorLevel)) // 使用 caller 和 Stacktrace
+	// Logger = zap.New(core, zap.AddCaller()) // 只使用 caller
+	// Logger = zap.New(core, zap.AddCaller(), zap.AddStacktrace(zapcore.ErrorLevel)) // 使用 caller 和 Stacktrace
 
 	// 必须 sync
-	defer Logger.Sync()
+	defer func() {
+		er := Logger.Sync()
+		if er != nil {
+			Logger.Error(er.Error())
+			return
+		}
+	}()
 
 	return nil
 }

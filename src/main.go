@@ -15,13 +15,7 @@ func main() {
 		panic(err)
 	}
 
-	// // 读取配置文件
-	// if err := global.SetConfig(); err != nil {
-	// 	panic(err)
-	// }
-
 	// 设置日志记录器
-	// if err := global.SetLogger(); err != nil {
 	if err := global.SetAdvLogger(); err != nil {
 		panic(err)
 	}

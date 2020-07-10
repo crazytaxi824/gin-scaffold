@@ -6,7 +6,7 @@ import (
 	"github.com/dxvgef/sessions"
 )
 
-// session管理器
+// Session 管理器
 var Session sessions.Manager
 
 // SetSessions 设置session Manager

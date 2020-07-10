@@ -58,7 +58,7 @@ var Config struct {
 }
 
 // 解析配置文件路径
-func parseFilePath(configFilePath string) (configName string, configType string) {
+func parseFilePath(configFilePath string) (configName, configType string) {
 	if configFilePath == "" {
 		return
 	}
@@ -75,7 +75,7 @@ func parseFilePath(configFilePath string) (configName string, configType string)
 	return
 }
 
-// 设置全局配置变量
+// SetConfig 设置全局配置变量
 func SetConfig() error {
 	configFilePath := flag.String("c", "./config.toml", "配置文件路径")
 	flag.Parse()

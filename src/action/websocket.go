@@ -10,12 +10,6 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-// var connPool map[string]interface{}
-//
-// func init() {
-// 	connPool = make(map[string]interface{})
-// }
-
 const (
 	buffSize = 1024
 	timeout  = 5
@@ -37,7 +31,13 @@ func WebsocketTest(ctx *gin.Context) {
 		global.Logger.Error("upgrade: " + err.Error())
 		return
 	}
-	defer conn.Close()
+	defer func() {
+		er := conn.Close()
+		if er != nil {
+			global.Logger.Error(er.Error())
+			return
+		}
+	}()
 
 	for {
 		// 接收消息

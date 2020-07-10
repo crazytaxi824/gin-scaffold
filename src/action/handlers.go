@@ -7,8 +7,6 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-
-	"src/global"
 )
 
 func GetHandler(ctx *gin.Context) {
@@ -37,8 +35,7 @@ func PostHandler(ctx *gin.Context) {
 	// panic("hello world")
 	_, err := strconv.ParseInt("1110", 10, 64)
 	if err != nil {
-		ctx.AbortWithError(http.StatusInternalServerError, err)
-		global.Logger.Sugar().Error(err)
+		abortWithError(ctx, err)
 		return
 	}
 

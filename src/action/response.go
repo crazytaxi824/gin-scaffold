@@ -8,13 +8,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// 响应单键值的数据
+// RespData 响应单键值的数据
 type RespData struct {
 	Error string      `json:"error"`
 	Data  interface{} `json:"data,omitempty"`
 }
 
-// 响应多键值的数据
+// RespMapData 响应多键值的数据
 type RespMapData struct {
 	Error string                 `json:"error"`
 	Data  map[string]interface{} `json:"data,omitempty"`
@@ -30,5 +30,6 @@ func makeRespMapData() (respData RespMapData) {
 func abortWithError(ctx *gin.Context, err error) {
 	// 追加错误行数到 gin.Error 中，使用 meta 属性
 	_, file, line, _ := runtime.Caller(1)
+	// nolint:errcheck // 不需要打印err
 	ctx.AbortWithError(http.StatusInternalServerError, err).SetMeta(file + ":" + strconv.Itoa(line))
 }

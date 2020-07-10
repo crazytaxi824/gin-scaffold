@@ -33,7 +33,7 @@ func SetLogger() error {
 
 	// 配置级别编码器
 	var encodeLevel zapcore.LevelEncoder
-	if Config.Logger.ColorLevel == true && Config.Logger.Encode == "console" && Config.Logger.Outputs != "stdout" {
+	if Config.Logger.ColorLevel && Config.Logger.Encode == "console" && Config.Logger.Outputs != "stdout" {
 		encodeLevel = zapcore.CapitalColorLevelEncoder
 	} else {
 		encodeLevel = zapcore.CapitalLevelEncoder
@@ -73,7 +73,13 @@ func SetLogger() error {
 	if err != nil {
 		return err
 	}
-	defer Logger.Sync()
+	defer func() {
+		er := Logger.Sync()
+		if er != nil {
+			Logger.Error(er.Error())
+			return
+		}
+	}()
 
 	// // 设置ServiceLogger
 	// ServiceLogger, err = zap.Config{

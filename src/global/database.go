@@ -15,15 +15,19 @@ type QueryHook struct{}
 // BeforeQuery 查询前钩子
 func (QueryHook) BeforeQuery(qe *pg.QueryEvent) {
 	// 连接数据库
-	//if err := SetDatabase(); err != nil {
-	//	Logger.Error(err.Error())
-	//}
+	// if err := SetDatabase(); err != nil {
+	// 	Logger.Error(err.Error())
+	// }
 }
 
 // AfterQuery 查询后钩子
 func (QueryHook) AfterQuery(qe *pg.QueryEvent) {
 	// 记录SQL语句
-	stmt, _ := qe.FormattedQuery()
+	stmt, err := qe.FormattedQuery()
+	if err != nil {
+		Logger.Error(err.Error())
+		return
+	}
 	Logger.Debug(stmt)
 }
 
@@ -58,7 +62,7 @@ func SetDatabase() error {
 	}
 
 	// 启用查询日志，将记录SQL语句
-	if Config.Database.EnableLog == true {
+	if Config.Database.EnableLog {
 		DB.AddQueryHook(QueryHook{})
 	}
 
