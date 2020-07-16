@@ -21,6 +21,12 @@ var (
 )
 
 func Start() {
+	// 设置自定义的表单验证
+	err := SetupValidator()
+	if err != nil {
+		panic(err)
+	}
+
 	EngineConfig()
 
 	// 在新协程中启动服务，方便实现退出等待

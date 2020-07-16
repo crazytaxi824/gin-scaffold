@@ -15,4 +15,12 @@ func setRouters() {
 
 		App.GET("/ws", action.WebsocketTest)
 	}
+
+	{
+		bind := App.Group("/bind")
+		bind.GET("/json", action.BindingJSONBody)
+		bind.GET("/query", action.BindingQueryGet)
+		bind.POST("/post", action.BindingQueryPost)
+		bind.POST("/gap", action.BindingQueryGetAndPost)
+	}
 }
