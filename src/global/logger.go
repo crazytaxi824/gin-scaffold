@@ -73,13 +73,11 @@ func SetLogger() error {
 	if err != nil {
 		return err
 	}
-	defer func() {
-		er := Logger.Sync()
-		if er != nil {
-			Logger.Error(er.Error())
-			return
-		}
-	}()
+
+	// 必须 sync, 不要返回 error！
+	// newer versions of OS X also don't support syncing stdout.
+	// nolint:errcheck,gocritic
+	defer Logger.Sync()
 
 	// // 设置ServiceLogger
 	// ServiceLogger, err = zap.Config{

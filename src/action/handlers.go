@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 )
 
 func GetHandler(ctx *gin.Context) {
@@ -148,7 +149,24 @@ func BindingQueryGetAndPost(ctx *gin.Context) {
 
 	var usr login
 	if err := ctx.ShouldBind(&usr); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		if _, ok := err.(*validator.InvalidValidationError); ok {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		errs, ok := err.(validator.ValidationErrors)
+		if !ok {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		var errMsg string
+
+		for _, er := range errs {
+			errMsg += er.Field() + " 不合法 " + er.Tag() + " | "
+		}
+
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": errMsg})
 		return
 	}
 
