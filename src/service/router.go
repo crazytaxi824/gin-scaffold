@@ -3,6 +3,9 @@ package service
 import "src/action"
 
 func setRouters() {
+	// 注册 pprof router
+	pprofRegister(App, "/debug/pprof")
+
 	// nolint:gocritic // test
 	{
 		// user := App.Group("/user", middleware)
