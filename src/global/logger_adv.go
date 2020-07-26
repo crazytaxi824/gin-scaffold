@@ -70,9 +70,10 @@ func SetAdvLogger() error {
 		// 大写编码
 		EncodeLevel: zapcore.CapitalLevelEncoder,
 
-		// 编码时间字符串的格式
+		// Json格式的日志使用 unix time
+		// EncodeTime: zapcore.EpochMillisTimeEncoder,
 		EncodeTime: func(t time.Time, p zapcore.PrimitiveArrayEncoder) {
-			p.AppendString(t.Format("2006-01-02 15:04:05"))
+			p.AppendInt64(t.UnixNano())
 		},
 	}
 
@@ -95,7 +96,7 @@ func SetAdvLogger() error {
 
 	// 必须 sync, 不要返回 error！
 	// newer versions of OS X also don't support syncing stdout.
-	// nolint:errcheck
+	// nolint:errcheck,gocritic
 	defer Logger.Sync()
 
 	return nil
