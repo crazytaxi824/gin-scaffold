@@ -29,8 +29,9 @@ func CORS() gin.HandlerFunc {
 				`Content-Length, Access-Control-Allow-Origin, 
 						Access-Control-Allow-Headers, Cache-Control, 
 						Content-Language, Content-Type, Expires, Last-Modified, Pragma`)
-			// 跨域请求是否需要带cookie信息 默认设置为true
-			c.Header("Access-Control-Allow-Credentials", "false")
+			// 跨域请求是否需要带 cookie 信息 除非明确设置为true，允许发送cookie，否则不发送。
+			// 如果设置为 true，则 Access-Control-Allow-Origin 不能设为 "*"，必须为指定域名。
+			// c.Header("Access-Control-Allow-Credentials", "false")
 			// 返回信息类型
 			c.Set("content-type", "application/json")
 		}
