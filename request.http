@@ -1,6 +1,15 @@
- POST http://localhost:18080/bind/gap?user=abcdefghijk
- Content-Type: application/x-www-form-urlencoded
+POST http://localhost:18080/bind/gap?user=abcde
+Content-Type: application/x-www-form-urlencoded
 
- password=123
+password=123&color=#ffff
+###
 
- ###
+GET http://localhost:18080/bind/query?user=abc&password=123
+Content-Type: text/plain
+###
+
+POST http://localhost:18080/bind/post
+Content-Type: application/x-www-form-urlencoded
+
+user=abc&password=123
+###

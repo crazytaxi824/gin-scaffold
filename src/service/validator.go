@@ -25,9 +25,8 @@ func SetupValidator() error {
 		return err
 	}
 
-	// 注册 tag 为 form，
-	// Password int `form:"pwd"`
-	// 这里意思类似json 是指将表单中从传入的 pwd 值赋值到 Password 属性中。
+	// FIXME 报错时，使用 "form" tag 中的 alias，否则会使用 struct 中的字段名。
+	//  Password int `form:"pwd"` 报错提示 "pwd 不合法"，而不是 "Password 不合法"。
 	v.RegisterTagNameFunc(func(field reflect.StructField) string {
 		tag := strings.SplitN(field.Tag.Get("form"), ",", 2)[0]
 		if tag == "-" {

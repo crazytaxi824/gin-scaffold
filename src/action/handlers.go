@@ -69,7 +69,7 @@ func ErrTest(ctx *gin.Context) {
 }
 
 // BindingJSONBody Test ShouldBindJSON
-//
+// 测试 json 请求的绑定。
 // GET http://localhost:18080/bind/json
 // Content-Type: application/json
 // {"usr":"manu", "pwd":"123"}
@@ -92,6 +92,7 @@ func BindingJSONBody(ctx *gin.Context) {
 }
 
 // BindingQueryGet Test ShouldBindQuery
+// 测试 GET query 请求的绑定
 // GET http://localhost:18080/bind/query?user=abc&password=123
 // Content-Type: text/plain
 // ###
@@ -113,6 +114,7 @@ func BindingQueryGet(ctx *gin.Context) {
 }
 
 // BindingQueryPost POST 请求使用 ShouldBind 可以自动绑定属性。
+// 测试 POST 请求的绑定。
 // POST http://localhost:18080/bind/post
 // Content-Type: application/x-www-form-urlencoded
 // user=abc&password=123
@@ -163,7 +165,7 @@ func BindingQueryGetAndPost(ctx *gin.Context) {
 		var errMsg string
 
 		for _, er := range errs {
-			errMsg += er.Field() + " 不合法 " + er.Tag() + " | "
+			errMsg += er.Namespace() + "" + er.StructNamespace() + " 不合法 " + er.Tag() + " | "
 		}
 
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": errMsg})
