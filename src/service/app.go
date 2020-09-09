@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 
 	"src/global"
 )
@@ -18,6 +19,11 @@ import (
 var (
 	App *gin.Engine
 	svr http.Server
+)
+
+const (
+	pprofPath      = "/debug/pprof/"
+	prometheusPath = "/prometheus/metrics" // prometheus config 文件必须对应该地址
 )
 
 func Start() {
@@ -69,11 +75,23 @@ func EngineConfig() {
 	// set routers
 	setRouters()
 
+	// add prometheus
+	mux := http.NewServeMux()
+	mux.Handle(prometheusPath, promhttp.Handler())
+
+	// add pprof
+	mux.Handle(pprofPath, pprofMux())
+
+	// add gin App
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		App.ServeHTTP(w, r)
+	})
+
 	const timeout = 10
 
 	svr = http.Server{
 		Addr:              global.Config.Service.IP + ":" + strconv.Itoa(global.Config.Service.Port),
-		Handler:           App,                   // 调度器
+		Handler:           mux,                   // 调度器, use chi here
 		ReadTimeout:       timeout * time.Second, // 读取超时
 		WriteTimeout:      timeout * time.Second, // 响应超时
 		IdleTimeout:       timeout * time.Second, // 连接空闲超时

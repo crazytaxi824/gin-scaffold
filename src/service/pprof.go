@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// 在 gin 的路由中注册 pprof，gin logger 会打印访问记录
 func pprofRegister(engine *gin.Engine, prefixPath ...string) {
 	var p string
 
@@ -16,8 +17,9 @@ func pprofRegister(engine *gin.Engine, prefixPath ...string) {
 		p = prefixPath[0]
 	}
 
-	prefixRouter := engine.Group(p)
 	{
+		// pprof
+		prefixRouter := engine.Group(p)
 		prefixRouter.GET("/", pprofHandler(pprof.Index))
 		prefixRouter.GET("/cmdline", pprofHandler(pprof.Cmdline))
 		prefixRouter.GET("/profile", pprofHandler(pprof.Profile))
@@ -37,4 +39,21 @@ func pprofHandler(h http.HandlerFunc) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		h.ServeHTTP(c.Writer, c.Request)
 	}
+}
+
+// 使用新的 mux 添加 pprof，在 gin 路由之外，gin logger 不会打印访问记录。
+func pprofMux() http.Handler {
+	pprofMux := http.NewServeMux()
+	pprofMux.HandleFunc(pprofPath, pprof.Index)
+	pprofMux.HandleFunc(pprofPath+"cmdline", pprof.Cmdline)
+	pprofMux.HandleFunc(pprofPath+"profile", pprof.Profile)
+	pprofMux.HandleFunc(pprofPath+"symbol", pprof.Symbol)
+	pprofMux.HandleFunc(pprofPath+"trace", pprof.Trace)
+	pprofMux.HandleFunc(pprofPath+"allocs", pprof.Handler("allocs").ServeHTTP)
+	pprofMux.HandleFunc(pprofPath+"block", pprof.Handler("block").ServeHTTP)
+	pprofMux.HandleFunc(pprofPath+"goroutine", pprof.Handler("goroutine").ServeHTTP)
+	pprofMux.HandleFunc(pprofPath+"heap", pprof.Handler("heap").ServeHTTP)
+	pprofMux.HandleFunc(pprofPath+"mutex", pprof.Handler("mutex").ServeHTTP)
+	pprofMux.HandleFunc(pprofPath+"threadcreate", pprof.Handler("threadcreate").ServeHTTP)
+	return pprofMux
 }

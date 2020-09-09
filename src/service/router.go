@@ -4,7 +4,7 @@ import "src/action"
 
 func setRouters() {
 	// 注册 pprof router
-	pprofRegister(App, "/debug/pprof")
+	// pprofRegister(App, "/debug/pprof")
 
 	// nolint:gocritic // test
 	{

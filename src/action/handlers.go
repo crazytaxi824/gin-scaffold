@@ -165,7 +165,8 @@ func BindingQueryGetAndPost(ctx *gin.Context) {
 		var errMsg string
 
 		for _, er := range errs {
-			errMsg += er.Namespace() + "" + er.StructNamespace() + " 不合法 " + er.Tag() + " | "
+			// service.SetupValidator() 中的 RegisterTagNameFunc 影响这里的 Namespace() Field() 名字
+			errMsg += er.Namespace() + " 不合法 " + er.Tag() + " | "
 		}
 
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": errMsg})
