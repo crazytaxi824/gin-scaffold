@@ -68,6 +68,23 @@ func ErrTest(ctx *gin.Context) {
 	abortWithError(ctx, errors.New("new error2"))
 }
 
+// UploadFile 接受上传文件
+func UploadFile(ctx *gin.Context) {
+	// 接受传入文件
+	fh, err := ctx.FormFile("filename")
+	if err != nil {
+		abortWithError(ctx, err)
+	}
+
+	// 拷贝文件到指定路径
+	err = ctx.SaveUploadedFile(fh, "/Users/ray/Desktop/gin-file/"+fh.Filename)
+	if err != nil {
+		abortWithError(ctx, err)
+	}
+
+	ctx.Status(http.StatusNoContent)
+}
+
 // BindingJSONBody Test ShouldBindJSON
 // 测试 json 请求的绑定。
 // GET http://localhost:18080/bind/json
@@ -88,7 +105,7 @@ func BindingJSONBody(ctx *gin.Context) {
 
 	log.Println(usr)
 
-	ctx.AbortWithStatus(http.StatusNoContent)
+	ctx.Status(http.StatusNoContent)
 }
 
 // BindingQueryGet Test ShouldBindQuery
@@ -110,7 +127,7 @@ func BindingQueryGet(ctx *gin.Context) {
 
 	log.Println(usr)
 
-	ctx.AbortWithStatus(http.StatusNoContent)
+	ctx.Status(http.StatusNoContent)
 }
 
 // BindingQueryPost POST 请求使用 ShouldBind 可以自动绑定属性。
@@ -133,7 +150,7 @@ func BindingQueryPost(ctx *gin.Context) {
 
 	log.Println(usr)
 
-	ctx.AbortWithStatus(http.StatusNoContent)
+	ctx.Status(http.StatusNoContent)
 }
 
 // BindingQueryGetAndPost POST请求，同时url有query字段
@@ -175,5 +192,5 @@ func BindingQueryGetAndPost(ctx *gin.Context) {
 
 	log.Println(usr)
 
-	ctx.AbortWithStatus(http.StatusNoContent)
+	ctx.Status(http.StatusNoContent)
 }

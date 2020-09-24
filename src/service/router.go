@@ -16,6 +16,8 @@ func setRouters() {
 		App.GET("/panic", action.PanicTest)
 		App.GET("/err", action.ErrTest)
 
+		App.POST("/upload", action.UploadFile)
+
 		App.GET("/ws", action.WebsocketTest)
 	}
 
